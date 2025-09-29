@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 # Bot configuration
 intents = discord.Intents.default()
 intents.guilds = True
+# Note: message_content intent not needed for slash commands
 
 bot = commands.Bot(
     command_prefix='!', 

@@ -20,27 +20,27 @@ class UNBotCommands:
         self.data = data_manager
         self.rate_limiter = rate_limiter
     
-    async def handle_rate_limit(self, ctx, command: str) -> bool:
+    async def handle_rate_limit(self, interaction: discord.Interaction, command: str) -> bool:
         """Handle rate limiting for commands"""
-        is_limited, remaining = self.rate_limiter.is_rate_limited(ctx.author.id, command)
+        is_limited, remaining = self.rate_limiter.is_rate_limited(interaction.user.id, command)
         if is_limited:
-            await ctx.respond(f"⏳ Please wait {remaining:.1f} seconds before using this command again.", ephemeral=True)
+            await interaction.response.send_message(f"⏳ Please wait {remaining:.1f} seconds before using this command again.", ephemeral=True)
             return True
         return False
     
-    async def charter(self, ctx, article: int):
+    async def charter(self, interaction: discord.Interaction, article: int):
         """Retrieve UN Charter article by number"""
-        if await self.handle_rate_limit(ctx, 'charter'):
+        if await self.handle_rate_limit(interaction, 'charter'):
             return
         
         if not validate_article_number(article):
-            await ctx.respond("❌ Invalid article number. Please use a number between 1 and 999.", ephemeral=True)
+            await interaction.response.send_message("❌ Invalid article number. Please use a number between 1 and 999.", ephemeral=True)
             return
         
         article_data = self.data.get_charter_article(article)
         if not article_data:
             available = self.data.get_available_articles()
-            await ctx.respond(
+            await interaction.response.send_message(
                 f"❌ Article {article} not found. Available articles: {', '.join(map(str, available))}",
                 ephemeral=True
             )
@@ -65,20 +65,20 @@ class UNBotCommands:
             embed.add_field(name="Content", value=content, inline=False)
         
         embed.set_footer(text="United Nations Charter • Use /help for more commands")
-        await ctx.respond(embed=embed)
-        logger.info(f"Charter article {article} requested by {ctx.author.name}")
+        await interaction.response.send_message(embed=embed)
+        logger.info(f"Charter article {article} requested by {interaction.user.name}")
     
-    async def resolution(self, ctx, resolution_type: str, number: int):
+    async def resolution(self, interaction: discord.Interaction, resolution_type: str, number: int):
         """Search for UN resolutions"""
-        if await self.handle_rate_limit(ctx, 'resolution'):
+        if await self.handle_rate_limit(interaction, 'resolution'):
             return
         
         if not validate_resolution_type(resolution_type):
-            await ctx.respond("❌ Invalid resolution type. Use 'sc' for Security Council or 'ga' for General Assembly.", ephemeral=True)
+            await interaction.response.send_message("❌ Invalid resolution type. Use 'sc' for Security Council or 'ga' for General Assembly.", ephemeral=True)
             return
         
         if not validate_resolution_number(number):
-            await ctx.respond("❌ Invalid resolution number. Please use a number between 1 and 9999.", ephemeral=True)
+            await interaction.response.send_message("❌ Invalid resolution number. Please use a number between 1 and 9999.", ephemeral=True)
             return
         
         if resolution_type.lower() == 'sc':
@@ -108,23 +108,23 @@ class UNBotCommands:
         )
         
         embed.set_footer(text="United Nations Official Documentation • Use /help for more commands")
-        await ctx.respond(embed=embed)
-        logger.info(f"Resolution {resolution_type.upper()} {number} requested by {ctx.author.name}")
+        await interaction.response.send_message(embed=embed)
+        logger.info(f"Resolution {resolution_type.upper()} {number} requested by {interaction.user.name}")
     
-    async def policy(self, ctx, term: str):
+    async def policy(self, interaction: discord.Interaction, term: str):
         """Get UN policy definition"""
-        if await self.handle_rate_limit(ctx, 'policy'):
+        if await self.handle_rate_limit(interaction, 'policy'):
             return
         
         term = sanitize_input(term, 50)
         if not term:
-            await ctx.respond("❌ Please provide a valid policy term.", ephemeral=True)
+            await interaction.response.send_message("❌ Please provide a valid policy term.", ephemeral=True)
             return
         
         policy_info = self.data.get_policy_term(term)
         if not policy_info:
             available = self.data.get_available_terms()
-            await ctx.respond(
+            await interaction.response.send_message(
                 f"❌ Policy term '{term}' not found. Available terms: {', '.join(available[:10])}" +
                 (f" and {len(available)-10} more..." if len(available) > 10 else ""),
                 ephemeral=True
@@ -146,17 +146,17 @@ class UNBotCommands:
             embed.add_field(name="Related Terms", value=related_text, inline=False)
         
         embed.set_footer(text="United Nations Policy Definitions • Use /help for more commands")
-        await ctx.respond(embed=embed)
-        logger.info(f"Policy term '{term}' requested by {ctx.author.name}")
+        await interaction.response.send_message(embed=embed)
+        logger.info(f"Policy term '{term}' requested by {interaction.user.name}")
     
-    async def search(self, ctx, query: str):
+    async def search(self, interaction: discord.Interaction, query: str):
         """Search for UN Charter articles or policy terms"""
-        if await self.handle_rate_limit(ctx, 'search'):
+        if await self.handle_rate_limit(interaction, 'search'):
             return
         
         query = sanitize_input(query, 100)
         if not query:
-            await ctx.respond("❌ Please provide a valid search query.", ephemeral=True)
+            await interaction.response.send_message("❌ Please provide a valid search query.", ephemeral=True)
             return
         
         charter_results = self.data.search_charter(query)
@@ -170,7 +170,7 @@ class UNBotCommands:
                 color=COLORS['warning'],
                 footer="Try different keywords or check available terms with /help"
             )
-            await ctx.respond(embed=embed)
+            await interaction.response.send_message(embed=embed)
             return
         
         embed = create_embed(
@@ -201,12 +201,12 @@ class UNBotCommands:
             )
         
         embed.set_footer(text="Use /charter, /policy, or /resolution for specific items • Use /help for more commands")
-        await ctx.respond(embed=embed)
-        logger.info(f"Search query '{query}' by {ctx.author.name} - {len(all_results)} results")
+        await interaction.response.send_message(embed=embed)
+        logger.info(f"Search query '{query}' by {interaction.user.name} - {len(all_results)} results")
     
-    async def latest(self, ctx):
+    async def latest(self, interaction: discord.Interaction):
         """Get latest UN news and updates"""
-        if await self.handle_rate_limit(ctx, 'latest'):
+        if await self.handle_rate_limit(interaction, 'latest'):
             return
         
         embed = create_embed(
@@ -234,12 +234,12 @@ class UNBotCommands:
         )
         
         embed.set_footer(text="United Nations Official Information • Use /help for more commands")
-        await ctx.respond(embed=embed)
-        logger.info(f"Latest news requested by {ctx.author.name}")
+        await interaction.response.send_message(embed=embed)
+        logger.info(f"Latest news requested by {interaction.user.name}")
     
-    async def help_command(self, ctx):
+    async def help_command(self, interaction: discord.Interaction):
         """Show help information"""
-        if await self.handle_rate_limit(ctx, 'help'):
+        if await self.handle_rate_limit(interaction, 'help'):
             return
         
         embed = create_embed(
@@ -275,5 +275,5 @@ class UNBotCommands:
             ],
             footer="Built for informed civic engagement and policy understanding • Rate limits apply"
         )
-        await ctx.respond(embed=embed)
-        logger.info(f"Help requested by {ctx.author.name}")
+        await interaction.response.send_message(embed=embed)
+        logger.info(f"Help requested by {interaction.user.name}")
