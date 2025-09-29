@@ -24,9 +24,7 @@ logger = logging.getLogger(__name__)
 
 # Bot configuration
 intents = discord.Intents.default()
-intents.message_content = True
 intents.guilds = True
-intents.guild_messages = True
 
 bot = commands.Bot(
     command_prefix='!', 
@@ -47,6 +45,13 @@ async def on_ready():
     logger.info(f'Bot is in {len(bot.guilds)} guilds')
     print(f'🌍 UN Bot is online and ready to serve!')
     print(f'📊 Connected to {len(bot.guilds)} servers')
+    
+    # Sync command tree
+    try:
+        synced = await bot.tree.sync()
+        logger.info(f"Synced {len(synced)} command(s)")
+    except Exception as e:
+        logger.error(f"Failed to sync commands: {e}")
 
 @bot.event
 async def on_guild_join(guild):
@@ -58,145 +63,97 @@ async def on_guild_remove(guild):
     """Log when bot leaves a guild"""
     logger.info(f'Left guild: {guild.name} (ID: {guild.id})')
 
-# Slash Commands
-@bot.slash_command(
+# Slash Commands using discord.py application commands
+@bot.tree.command(
     name="charter",
-    description="Retrieves and posts the full text of a specific UN Charter Article",
-    options=[
-        discord.Option(
-            int,
-            name="article",
-            description="The article number to retrieve (1-999)",
-            required=True,
-            min_value=1,
-            max_value=999
-        )
-    ]
+    description="Retrieves and posts the full text of a specific UN Charter Article"
 )
-async def charter(ctx, article: int):
+async def charter(interaction: discord.Interaction, article: int):
     """Retrieve UN Charter article by number"""
     try:
-        await command_handler.charter(ctx, article)
+        await command_handler.charter(interaction, article)
     except Exception as e:
         logger.error(f"Error in charter command: {e}")
-        await ctx.respond("❌ An error occurred while retrieving the charter article. Please try again later.", ephemeral=True)
+        await interaction.response.send_message("❌ An error occurred while retrieving the charter article. Please try again later.", ephemeral=True)
 
-@bot.slash_command(
+@bot.tree.command(
     name="resolution",
-    description="Searches for and links to a specific Security Council or General Assembly resolution",
-    options=[
-        discord.Option(
-            str,
-            name="type",
-            description="Resolution type",
-            required=True,
-            choices=[
-                discord.OptionChoice(name="Security Council (SC)", value="sc"),
-                discord.OptionChoice(name="General Assembly (GA)", value="ga")
-            ]
-        ),
-        discord.Option(
-            int,
-            name="number",
-            description="Resolution number",
-            required=True,
-            min_value=1,
-            max_value=9999
-        )
-    ]
+    description="Searches for and links to a specific Security Council or General Assembly resolution"
 )
-async def resolution(ctx, type: str, number: int):
+async def resolution(interaction: discord.Interaction, type: str, number: int):
     """Search for UN resolutions"""
     try:
-        await command_handler.resolution(ctx, type, number)
+        await command_handler.resolution(interaction, type, number)
     except Exception as e:
         logger.error(f"Error in resolution command: {e}")
-        await ctx.respond("❌ An error occurred while searching for the resolution. Please try again later.", ephemeral=True)
+        await interaction.response.send_message("❌ An error occurred while searching for the resolution. Please try again later.", ephemeral=True)
 
-@bot.slash_command(
+@bot.tree.command(
     name="policy",
-    description="Provides a brief, sourced definition/overview of a UN policy term",
-    options=[
-        discord.Option(
-            str,
-            name="term",
-            description="The policy term to look up",
-            required=True,
-            max_length=50
-        )
-    ]
+    description="Provides a brief, sourced definition/overview of a UN policy term"
 )
-async def policy(ctx, term: str):
+async def policy(interaction: discord.Interaction, term: str):
     """Get UN policy definition"""
     try:
-        await command_handler.policy(ctx, term)
+        await command_handler.policy(interaction, term)
     except Exception as e:
         logger.error(f"Error in policy command: {e}")
-        await ctx.respond("❌ An error occurred while retrieving the policy definition. Please try again later.", ephemeral=True)
+        await interaction.response.send_message("❌ An error occurred while retrieving the policy definition. Please try again later.", ephemeral=True)
 
-@bot.slash_command(
+@bot.tree.command(
     name="search",
-    description="Search for UN Charter articles or policy terms",
-    options=[
-        discord.Option(
-            str,
-            name="query",
-            description="Search query",
-            required=True,
-            max_length=100
-        )
-    ]
+    description="Search for UN Charter articles or policy terms"
 )
-async def search(ctx, query: str):
+async def search(interaction: discord.Interaction, query: str):
     """Search for UN Charter articles or policy terms"""
     try:
-        await command_handler.search(ctx, query)
+        await command_handler.search(interaction, query)
     except Exception as e:
         logger.error(f"Error in search command: {e}")
-        await ctx.respond("❌ An error occurred while searching. Please try again later.", ephemeral=True)
+        await interaction.response.send_message("❌ An error occurred while searching. Please try again later.", ephemeral=True)
 
-@bot.slash_command(
+@bot.tree.command(
     name="latest",
     description="Posts a link and summary of the most recent official UN news update or Security Council session"
 )
-async def latest(ctx):
+async def latest(interaction: discord.Interaction):
     """Get latest UN news and updates"""
     try:
-        await command_handler.latest(ctx)
+        await command_handler.latest(interaction)
     except Exception as e:
         logger.error(f"Error in latest command: {e}")
-        await ctx.respond("❌ An error occurred while retrieving the latest news. Please try again later.", ephemeral=True)
+        await interaction.response.send_message("❌ An error occurred while retrieving the latest news. Please try again later.", ephemeral=True)
 
-@bot.slash_command(
+@bot.tree.command(
     name="help",
     description="Shows all available commands and their usage"
 )
-async def help_command(ctx):
+async def help_command(interaction: discord.Interaction):
     """Show help information"""
     try:
-        await command_handler.help_command(ctx)
+        await command_handler.help_command(interaction)
     except Exception as e:
         logger.error(f"Error in help command: {e}")
-        await ctx.respond("❌ An error occurred while retrieving help. Please try again later.", ephemeral=True)
+        await interaction.response.send_message("❌ An error occurred while retrieving help. Please try again later.", ephemeral=True)
 
 # Error handling
 @bot.event
-async def on_application_command_error(ctx, error):
+async def on_application_command_error(interaction: discord.Interaction, error):
     """Handle application command errors"""
-    logger.error(f"Application command error in {ctx.command}: {error}")
+    logger.error(f"Application command error in {interaction.command}: {error}")
     
     if isinstance(error, commands.CommandOnCooldown):
-        await ctx.respond(f"⏳ This command is on cooldown. Try again in {error.retry_after:.1f} seconds.", ephemeral=True)
+        await interaction.response.send_message(f"⏳ This command is on cooldown. Try again in {error.retry_after:.1f} seconds.", ephemeral=True)
     elif isinstance(error, commands.MissingPermissions):
-        await ctx.respond("❌ You don't have permission to use this command.", ephemeral=True)
+        await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
     elif isinstance(error, discord.HTTPException):
         if error.status == 429:
-            await ctx.respond("⏳ Discord is rate limiting requests. Please try again later.", ephemeral=True)
+            await interaction.response.send_message("⏳ Discord is rate limiting requests. Please try again later.", ephemeral=True)
         else:
-            await ctx.respond("❌ A Discord API error occurred. Please try again later.", ephemeral=True)
+            await interaction.response.send_message("❌ A Discord API error occurred. Please try again later.", ephemeral=True)
     else:
         logger.error(f"Unhandled error: {error}", exc_info=True)
-        await ctx.respond("❌ An unexpected error occurred. Please try again later.", ephemeral=True)
+        await interaction.response.send_message("❌ An unexpected error occurred. Please try again later.", ephemeral=True)
 
 @bot.event
 async def on_error(event, *args, **kwargs):
