@@ -1,0 +1,90 @@
+{
+  "r2p": {
+    "title": "Responsibility to Protect (R2P)",
+    "description": "The Responsibility to Protect is a principle that states that the international community has a responsibility to protect populations from genocide, war crimes, ethnic cleansing, and crimes against humanity when their own governments are unable or unwilling to do so. R2P was adopted by the UN General Assembly in 2005 and represents a commitment to prevent mass atrocities.",
+    "sources": [
+      "UN General Assembly Resolution 60/1 (2005 World Summit Outcome)",
+      "UN Security Council Resolution 1674 (2006)",
+      "UN Secretary-General's reports on R2P implementation"
+    ],
+    "related_terms": ["genocide", "crimes against humanity", "war crimes", "ethnic cleansing", "humanitarian intervention"],
+    "aliases": ["responsibility to protect", "r2p", "right to protect"]
+  },
+  "sdgs": {
+    "title": "Sustainable Development Goals (SDGs)",
+    "description": "The Sustainable Development Goals are a collection of 17 interlinked global goals designed to be a 'blueprint to achieve a better and more sustainable future for all'. The SDGs were set up in 2015 by the United Nations General Assembly and are intended to be achieved by 2030.",
+    "sources": [
+      "UN General Assembly Resolution 70/1 (2015)",
+      "UN Sustainable Development Goals website",
+      "UN Department of Economic and Social Affairs"
+    ],
+    "related_terms": ["2030 agenda", "sustainable development", "millennium development goals", "mdgs"],
+    "aliases": ["sustainable development goals", "sdgs", "global goals", "2030 agenda"]
+  },
+  "unsc": {
+    "title": "United Nations Security Council (UNSC)",
+    "description": "The United Nations Security Council is one of the six principal organs of the UN, charged with ensuring international peace and security, accepting new members to the UN, and approving any changes to the UN Charter. It has 15 members, including 5 permanent members with veto power.",
+    "sources": [
+      "UN Charter Chapter V",
+      "UN Security Council website",
+      "UN Documentation on Security Council procedures"
+    ],
+    "related_terms": ["permanent members", "veto power", "peacekeeping", "sanctions"],
+    "aliases": ["security council", "unsc", "sc"]
+  },
+  "unga": {
+    "title": "United Nations General Assembly (UNGA)",
+    "description": "The United Nations General Assembly is one of the six principal organs of the UN, serving as the main deliberative, policymaking, and representative organ of the UN. All 193 member states have equal representation in the General Assembly.",
+    "sources": [
+      "UN Charter Chapter IV",
+      "UN General Assembly website",
+      "UN Documentation on General Assembly procedures"
+    ],
+    "related_terms": ["member states", "resolutions", "deliberative", "policymaking"],
+    "aliases": ["general assembly", "unga", "ga"]
+  },
+  "peacekeeping": {
+    "title": "UN Peacekeeping",
+    "description": "UN Peacekeeping is a unique and dynamic instrument developed by the Organization as a way to help countries torn by conflict create the conditions for lasting peace. Peacekeeping operations are deployed with the consent of the main parties to the conflict and are guided by three basic principles: consent of the parties, impartiality, and non-use of force except in self-defence and defence of the mandate.",
+    "sources": [
+      "UN Peacekeeping website",
+      "UN Charter Chapter VI and VII",
+      "UN Department of Peace Operations"
+    ],
+    "related_terms": ["peace operations", "conflict prevention", "peacebuilding", "peace enforcement"],
+    "aliases": ["peacekeeping", "peace operations", "un peacekeeping"]
+  },
+  "humanitarian": {
+    "title": "Humanitarian Assistance",
+    "description": "Humanitarian assistance is aid and action designed to save lives, alleviate suffering and maintain human dignity during and in the aftermath of man-made crises and natural disasters, as well as to prevent and strengthen preparedness for the occurrence of such situations.",
+    "sources": [
+      "UN Office for the Coordination of Humanitarian Affairs (OCHA)",
+      "UN Humanitarian Response website",
+      "UN General Assembly resolutions on humanitarian assistance"
+    ],
+    "related_terms": ["emergency response", "disaster relief", "humanitarian principles", "ocha"],
+    "aliases": ["humanitarian assistance", "humanitarian aid", "emergency response", "disaster relief"]
+  },
+  "climate": {
+    "title": "Climate Action",
+    "description": "Climate action refers to efforts to combat climate change and its impacts. The UN plays a central role in international climate negotiations and supports countries in their efforts to reduce greenhouse gas emissions and adapt to climate change impacts.",
+    "sources": [
+      "UN Framework Convention on Climate Change (UNFCCC)",
+      "Paris Agreement (2015)",
+      "UN Climate Change website"
+    ],
+    "related_terms": ["climate change", "greenhouse gases", "paris agreement", "unfccc"],
+    "aliases": ["climate action", "climate change", "global warming", "environment"]
+  },
+  "refugees": {
+    "title": "Refugee Protection",
+    "description": "Refugee protection refers to the international legal framework and practical measures to protect people who have been forced to flee their countries due to persecution, war, or violence. The UN Refugee Agency (UNHCR) leads international action to protect refugees and resolve refugee problems worldwide.",
+    "sources": [
+      "1951 Refugee Convention",
+      "UNHCR website",
+      "UN General Assembly resolutions on refugees"
+    ],
+    "related_terms": ["asylum", "displacement", "unhcr", "refugee convention"],
+    "aliases": ["refugees", "refugee protection", "asylum", "displacement"]
+  }
+}

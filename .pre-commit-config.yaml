@@ -1,0 +1,23 @@
+# Pre-commit configuration for UN Discord Bot
+# Install with: pip install pre-commit && pre-commit install
+
+repos:
+  - repo: local
+    hooks:
+      - id: check-env-files
+        name: Check for .env files
+        entry: bash -c 'if [ -f .env ]; then echo "❌ .env file detected! Remove it before committing."; exit 1; fi'
+        language: system
+        pass_filenames: false
+      
+      - id: check-secrets
+        name: Check for hardcoded secrets
+        entry: bash -c 'if grep -r "DISCORD_TOKEN=" . --exclude-dir=.git --exclude="env_example.txt" --exclude=".env.example"; then echo "❌ Hardcoded DISCORD_TOKEN detected!"; exit 1; fi'
+        language: system
+        pass_filenames: false
+      
+      - id: check-logs
+        name: Check for log files
+        entry: bash -c 'if find . -name "*.log" -not -path "./.git/*" | grep -q .; then echo "❌ Log files detected! Add them to .gitignore."; exit 1; fi'
+        language: system
+        pass_filenames: false
